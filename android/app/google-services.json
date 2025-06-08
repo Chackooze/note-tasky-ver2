@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "284217630302",
+    "project_id": "notetaskyver2",
+    "storage_bucket": "notetaskyver2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:284217630302:android:c9e3dcce4abc3079a21ecf",
+        "android_client_info": {
+          "package_name": "com.example.note_tasky_ver2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUaf1OadQ1xiyboeybAZUhISAP0JRfrTc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
