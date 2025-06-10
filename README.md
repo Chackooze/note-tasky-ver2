@@ -2,7 +2,7 @@
 
 Aplikasi mobile untuk mengelola catatan dan tugas dengan sistem autentikasi Firebase dan penyimpanan cloud.
 
-## Nama
+## Fabian Ahmad Revindra
 **NoteTasky Version 2** - Aplikasi produktivitas untuk mencatat dan mengelola tugas harian
 
 ## Judul Project
