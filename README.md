@@ -88,39 +88,46 @@ flutter run
 ## Screenshot UI dan Tampilan
 
 ### **Login Screen**
+![Login Page](screenshot/login.png)
 - Form login dengan email dan password
 - Link navigasi ke halaman registrasi
 - Loading indicator saat proses autentikasi
 - Error handling dengan SnackBar
 
 ### **Signup Screen**
+![Sign Up Page](screenshot/signup.png)
 - Form registrasi dengan nama, email, dan password
 - Validasi input (password minimal 6 karakter)
 - Link navigasi ke halaman login
 
 ### **Home Screen**
+![Home Screen](screenshot/home.png)
 - Dashboard utama aplikasi
 - Navigasi ke fitur Notes dan Tasks
 
 ### **Add Note Screen**
+![Add Note](screenshot/addnote.png)
 - Form input judul catatan
 - Text area untuk konten catatan (expandable)
 - Dropdown pemilihan kategori
 - Tombol simpan dengan loading state
 
 ### **View Note Screen**
+![View Note](screenshot/viewnote.png)
 - Daftar catatan dalam bentuk cards
 - Preview konten dengan ellipsis overflow
 - Tombol edit dan delete per catatan
 - FloatingActionButton untuk tambah catatan baru
 
 ### **Add Task Screen**
+![Add Task](screenshot/addtask.png)
 - Form input judul tugas
 - Text area untuk deskripsi tugas
 - Dropdown pemilihan kategori
 - Tombol simpan dengan loading state
 
 ### **View Task Screen**
+![View Task](screenshot/viewtask.png)
 - Daftar tugas dalam ListTile format
 - Checkbox untuk menandai completion status
 - Strikethrough text untuk tugas selesai
@@ -171,4 +178,3 @@ flutter run
 - **Input Validation** untuk mencegah data kosong
 - **Error Handling** yang comprehensive
 
----
