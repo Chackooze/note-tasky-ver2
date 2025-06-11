@@ -1,9 +1,9 @@
 # NoteTasky
 
-Aplikasi mobile untuk mengelola catatan dan tugas dengan sistem autentikasi Firebase dan penyimpanan cloud.
+Aplikasi mobile untuk mengelola catatan dan tugas dengan sistem autentikasi menggunakan Firebase dan penyimpanan cloud.
 
 ## Fabian Ahmad Revindra
-**NoteTasky Version 2** - Aplikasi produktivitas untuk mencatat dan mengelola tugas harian
+**NoteTasky Version 2** - Aplikasi untuk mencatat dan mengelola tugas harian
 
 ## Judul Project
 **NoteTasky Ver2** - Note & Task Management App
@@ -12,13 +12,13 @@ Aplikasi mobile untuk mengelola catatan dan tugas dengan sistem autentikasi Fire
 
 NoteTasky adalah aplikasi Flutter yang memungkinkan pengguna untuk:
 
-### 🔐 **Sistem Autentikasi**
+###  **Sistem Autentikasi**
 - **Login** dengan email dan password
 - **Registrasi** akun baru dengan nama, email, dan password
 - **Autentikasi otomatis** dengan Firebase Auth
 - **Multi-user support** dengan isolasi data per pengguna
 
-### 📝 **Manajemen Catatan (Notes)**
+###  **Manajemen Catatan (Notes)**
 - **Membuat catatan baru** dengan judul, konten, dan kategori
 - **Melihat daftar catatan** milik pengguna yang sedang login
 - **Mengedit catatan** yang sudah ada
@@ -26,7 +26,7 @@ NoteTasky adalah aplikasi Flutter yang memungkinkan pengguna untuk:
 - **Kategorisasi catatan**: Personal, Work, Study, Ideas, Recipes, Travel, Other
 - **Tampilan ringkas** dengan preview konten (3 baris maksimal)
 
-### ✅ **Manajemen Tugas (Tasks)**
+###  **Manajemen Tugas (Tasks)**
 - **Membuat tugas baru** dengan judul, deskripsi, dan kategori
 - **Melihat daftar tugas** dengan status completed/incomplete
 - **Mengedit tugas** yang sudah ada
