@@ -21,97 +21,196 @@ class _ViewNoteScreenState extends State<ViewNoteScreen> {
     final userId = _authService.uid;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Daftar Note'),
-        backgroundColor: Colors.purple[300],
-        foregroundColor: Colors.white,
-      ),
-      body: StreamBuilder<List<Note>>(
-        stream: _firestoreService.getNotes(userId),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('Belum ada note'));
-          }
-
-          final notes = snapshot.data!;
-
-          return ListView.builder(
-            itemCount: notes.length,
-            itemBuilder: (context, index) {
-              final note = notes[index];
-              return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Title
-                      Text(
-                        note.title,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF667eea),
+              Color(0xFF764ba2),
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Custom App Bar
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Your Notes',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
-                      const SizedBox(height: 4),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close, color: Colors.white, size: 28),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+              ),
+              
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: StreamBuilder<List<Note>>(
+                      stream: _firestoreService.getNotes(userId),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
+                        }
 
-                      // Category
-                      Text(
-                        'Kategori: ${note.category}',
-                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                      ),
-                      const SizedBox(height: 8),
+                        if (snapshot.hasError) {
+                          return Center(child: Text('Error: ${snapshot.error}'));
+                        }
 
-                      // Content with max lines and overflow
-                      Text(
-                        note.content,
-                        style: const TextStyle(fontSize: 14),
-                        maxLines: 3, // Limit to 3 lines initially
-                        overflow: TextOverflow
-                            .ellipsis, // Show ... if text is too long
-                      ),
-                      const SizedBox(height: 8),
+                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.note_add, size: 60, color: Colors.grey[400]),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'No notes yet',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Tap the + button to add a new note',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[500],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
 
-                      // Date
-                      Text(
-                        'Dibuat: ${note.createdAt.toString().substring(0, 10)}',
-                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                      ),
+                        final notes = snapshot.data!;
 
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit, color: Colors.blue),
-                            onPressed: () {
-                              _showEditNoteDialog(context, note);
-                            },
-                          ),
+                        return ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: notes.length,
+                          itemBuilder: (context, index) {
+                            final note = notes[index];
+                            return Card(
+                              elevation: 2,
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(15),
+                                onTap: () {
+                                  _showEditNoteDialog(context, note);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      // Title
+                                      Text(
+                                        note.title,
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
 
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () {
-                              _showDeleteConfirmationDialog(context, note);
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
+                                      // Category with colored chip
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: _getCategoryColor(note.category).withOpacity(0.2),
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                        child: Text(
+                                          note.category,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: _getCategoryColor(note.category),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 12),
+
+                                      // Content with max lines and overflow
+                                      Text(
+                                        note.content,
+                                        style: const TextStyle(fontSize: 14),
+                                        maxLines: 3,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 12),
+
+                                      // Date and actions
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Created: ${note.createdAt.toString().substring(0, 10)}',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                          Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(Icons.edit, color: Colors.blue),
+                                                onPressed: () {
+                                                  _showEditNoteDialog(context, note);
+                                                },
+                                              ),
+                                              IconButton(
+                                                icon: const Icon(Icons.delete, color: Colors.red),
+                                                onPressed: () {
+                                                  _showDeleteConfirmationDialog(context, note);
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ),
                 ),
-              );
-            },
-          );
-        },
+              ),
+            ],
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -120,10 +219,29 @@ class _ViewNoteScreenState extends State<ViewNoteScreen> {
             MaterialPageRoute(builder: (context) => const AddNoteScreen()),
           );
         },
-        backgroundColor: Colors.purple[300],
-        child: const Icon(Icons.add),
+        backgroundColor: const Color(0xFF667eea),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
+  }
+
+  Color _getCategoryColor(String category) {
+    switch (category) {
+      case 'Work':
+        return const Color(0xFF667eea);
+      case 'Personal':
+        return const Color(0xFF48bb78);
+      case 'Study':
+        return const Color(0xFFed8936);
+      case 'Ideas':
+        return const Color(0xFF9f7aea);
+      case 'Recipes':
+        return const Color(0xFFe53e3e);
+      case 'Travel':
+        return const Color(0xFF805ad5);
+      default:
+        return const Color(0xFF718096);
+    }
   }
 
   void _showEditNoteDialog(BuildContext context, Note note) {
@@ -164,7 +282,7 @@ class _ViewNoteScreenState extends State<ViewNoteScreen> {
                 CustomTextField(
                   hint: "Enter note title",
                   label: "Title",
-                  controller: titleController,
+                  controller: titleController, prefixIcon: Icons.title, keyboardType: TextInputType.name, obscureText: false,
                 ),
 
                 const SizedBox(height: 16),
