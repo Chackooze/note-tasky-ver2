@@ -21,91 +21,216 @@ class _ViewTaskScreenState extends State<ViewTaskScreen> {
     final userId = _authService.uid;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Daftar Task'),
-        backgroundColor: Colors.purple[300],
-        foregroundColor: Colors.white,
-      ),
-      body: StreamBuilder<List<Task>>(
-        stream: _firestoreService.getTasks(userId),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('Belum ada task'));
-          }
-
-          final tasks = snapshot.data!;
-
-          return ListView.builder(
-            itemCount: tasks.length,
-            itemBuilder: (context, index) {
-              final task = tasks[index];
-              return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: ListTile(
-                  title: Text(
-                    task.title,
-                    style: TextStyle(
-                      decoration: task.isCompleted
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF667eea),
+              Color(0xFF764ba2),
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Custom App Bar
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Your Tasks',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close, color: Colors.white, size: 28),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+              ),
+              
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
                     ),
                   ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(task.description),
-                      Text(
-                        'Kategori: ${task.category}',
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      Text(
-                        'Dibuat: ${task.createdAt.toString().substring(0, 10)}',
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Checkbox(
-                        value: task.isCompleted,
-                        onChanged: (value) {
-                          setState(() {
-                            task.isCompleted = value ?? false;
-                          });
-                          _firestoreService.updateTask(
-                            task,
-                            {'isCompleted': value ?? false},
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: StreamBuilder<List<Task>>(
+                      stream: _firestoreService.getTasks(userId),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
+                        }
+
+                        if (snapshot.hasError) {
+                          return Center(child: Text('Error: ${snapshot.error}'));
+                        }
+
+                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.task, size: 60, color: Colors.grey[400]),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'No tasks yet',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Tap the + button to add a new task',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[500],
+                                  ),
+                                ),
+                              ],
+                            ),
                           );
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.edit, color: Colors.blue),
-                        onPressed: () {
-                          _showEditTaskDialog(context, task);
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          _showDeleteConfirmationDialog(context, task);
-                        },
-                      ),
-                    ],
+                        }
+
+                        final tasks = snapshot.data!;
+
+                        return ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: tasks.length,
+                          itemBuilder: (context, index) {
+                            final task = tasks[index];
+                            return Card(
+                              elevation: 2,
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Checkbox(
+                                          value: task.isCompleted,
+                                          activeColor: const Color(0xFF667eea),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              task.isCompleted = value ?? false;
+                                            });
+                                            _firestoreService.updateTask(
+                                              task,
+                                              {'isCompleted': value ?? false},
+                                            );
+                                          },
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            task.title,
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              decoration: task.isCompleted
+                                                  ? TextDecoration.lineThrough
+                                                  : TextDecoration.none,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    
+                                    if (task.description.isNotEmpty) ...[
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        task.description,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey[700],
+                                        ),
+                                      ),
+                                    ],
+                                    
+                                    const SizedBox(height: 12),
+                                    
+                                    // Category and date row
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 4),
+                                          decoration: BoxDecoration(
+                                            color: _getCategoryColor(task.category).withOpacity(0.2),
+                                            borderRadius: BorderRadius.circular(20),
+                                          ),
+                                          child: Text(
+                                            task.category,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: _getCategoryColor(task.category),
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          'Created: ${task.createdAt.toString().substring(0, 10)}',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey[600],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    
+                                    const SizedBox(height: 8),
+                                    
+                                    // Action buttons
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(Icons.edit, color: Colors.blue),
+                                          onPressed: () {
+                                            _showEditTaskDialog(context, task);
+                                          },
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.delete, color: Colors.red),
+                                          onPressed: () {
+                                            _showDeleteConfirmationDialog(context, task);
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ),
                 ),
-              );
-            },
-          );
-        },
+              ),
+            ],
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -114,10 +239,27 @@ class _ViewTaskScreenState extends State<ViewTaskScreen> {
             MaterialPageRoute(builder: (context) => const AddTaskScreen()),
           );
         },
-        backgroundColor: Colors.purple[300],
-        child: const Icon(Icons.add),
+        backgroundColor: const Color(0xFF667eea),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
+  }
+
+  Color _getCategoryColor(String category) {
+    switch (category) {
+      case 'Work':
+        return const Color(0xFF667eea);
+      case 'Personal':
+        return const Color(0xFF48bb78);
+      case 'Study':
+        return const Color(0xFFed8936);
+      case 'Health':
+        return const Color(0xFFe53e3e);
+      case 'Shopping':
+        return const Color(0xFF805ad5);
+      default:
+        return const Color(0xFF718096);
+    }
   }
 
   void _showEditTaskDialog(BuildContext context, Task task) {
@@ -154,7 +296,7 @@ class _ViewTaskScreenState extends State<ViewTaskScreen> {
               CustomTextField(
                 hint: "Enter task title",
                 label: "Title",
-                controller: titleController,
+                controller: titleController, prefixIcon: Icons.title, keyboardType: TextInputType.name, obscureText: false,
               ),
               
               const SizedBox(height: 16),
